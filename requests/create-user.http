@@ -1,0 +1,9 @@
+POST http://localhost:3000/users
+Content-Type: application/json
+authorization: XXXresponse_token_hereXXX
+
+{
+	"name": "Joe Doe",
+	"email": "jdoe@mail.com",
+	"phone": "0987654321"
+}

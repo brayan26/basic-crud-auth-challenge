@@ -1,0 +1,6 @@
+services:
+  ms-auth-user: 
+    build: .
+    container_name: ms-auth-user-challenge
+    ports:
+      - "3000:3000"

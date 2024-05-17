@@ -1,0 +1,3 @@
+GET http://localhost:3000/users
+User-Agent: insomnia/8.6.0
+authorization: XXXresponse_token_hereXXX
