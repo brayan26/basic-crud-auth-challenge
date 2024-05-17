@@ -10,10 +10,14 @@ docker-compose -f docker-compose.yml up -d
 
 Once the docker command finishes executing, you can use the endpoints.
 
+## Postman
+import the ```./api.postman_collection.json``` file to your postman application
+![alt text](image.png)
+
+
 ## HTTP Request's
 
 CURL's for using endpoints.
-
 
 ## Login
 ```
