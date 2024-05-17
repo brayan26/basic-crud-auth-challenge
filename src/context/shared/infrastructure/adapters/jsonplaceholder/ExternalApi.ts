@@ -18,4 +18,8 @@ export default class ExternalApi extends AxiosClientFactory {
   async getAll(): Promise<AxiosResponse<any>> {
     return this.invoke(this.CREATE_USER_PATH, HTTP_VERBS.GET, this.headers);
   }
+
+  async getById(id: string): Promise<AxiosResponse<any>> {
+    return this.invoke(`${this.CREATE_USER_PATH}/${id}`, HTTP_VERBS.GET, this.headers);
+  }
 }

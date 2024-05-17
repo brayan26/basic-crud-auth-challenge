@@ -2,12 +2,15 @@ import express from 'express';
 import Router from 'express-promise-router';
 import helmet from 'helmet';
 import * as http from 'http';
-import Logger from '@context/shared/infrastructure/impl/WinstonInfoLogger';
 import { hostname } from 'os';
 import { registerRoutes } from '../routes';
 import { ErrorHandlerResponse } from './ErrorHandleResponse';
 import routesSwagger from 'express-list-endpoints';
 import morgan from 'morgan';
+import Logger from '@context/shared/infrastructure/impl/WinstonLogger';
+import container from '@app/dependency-injection';
+
+const logger: Logger = container.get('Shared.Logger');
 
 export class Server {
   private readonly port: number;
@@ -30,14 +33,14 @@ export class Server {
     this.app.use(router, ErrorHandlerResponse);
     this.app.use(router);
     registerRoutes(router);
-    Logger.print(routesSwagger(this.app));
+    logger.info(routesSwagger(this.app));
   }
 
   listen = async (): Promise<void> => {
     return new Promise((resolve) => {
       this.httpServer = this.app.listen(this.port, () => {
-        Logger.print(`Server is running at ${hostname}:${this.port}`);
-        Logger.print('Press CTRL-C to stop');
+        logger.info(`Server is running at ${hostname}:${this.port}`);
+        logger.info('Press CTRL-C to stop');
         resolve();
       });
     });

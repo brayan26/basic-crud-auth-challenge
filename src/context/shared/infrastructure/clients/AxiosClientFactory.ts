@@ -1,6 +1,10 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse, Method } from 'axios';
-import Logger from '@context/shared/infrastructure/impl/WinstonInfoLogger';
+import Logger from '@context/shared/infrastructure/impl/WinstonLogger';
+import container from '@app/dependency-injection';
+
+
 export default abstract class AxiosClientFactory {
+  private logger: Logger = container.get('Shared.Logger');
   private axiosInstance: any = axios.create({});
 
   protected async invoke(
@@ -26,12 +30,12 @@ export default abstract class AxiosClientFactory {
   private handleInterceptors = (headers: AxiosRequestHeaders, data?: object | unknown): void => {
     this.axiosInstance.interceptors.request.use(
       (config: AxiosRequestConfig) => {
-        Logger.print(`[ Request config ]: ${config.method?.toUpperCase() || ''} [ To ]: ${config.url || ''}`);
+        this.logger.info(`[ Request config ]: ${config.method?.toUpperCase() || ''} [ To ]: ${config.url || ''}`);
 
         return config;
       },
       (error: AxiosError<string>) => {
-        Logger.print(`[ Request Error ] CODE ${error.code || 'UNKNOWN'} | ${error.message}`, 'error');
+        this.logger.error(`[ Request Error ] CODE ${error.code || 'UNKNOWN'} | ${error.message}`);
 
         return error;
       },
@@ -39,14 +43,14 @@ export default abstract class AxiosClientFactory {
 
     this.axiosInstance.interceptors.response.use(
       async (response: AxiosResponse) => {
-        Logger.print(`[ Client Response ]: STATUS:${response.status}`);
+        this.logger.info(`[ Client Response ]: STATUS:${response.status}`);
 
         return response;
       },
       async (error: AxiosError<string>) => {
-        Logger.print(`[ Stack Error ] CODE ${error.stack || 'UNKNOWN'} | ${error.message}`, 'error');
-        Logger.print(`[ Response Error ] CODE ${error.code || 'UNKNOWN'} | ${error.message}`, 'error');
-        Logger.print(`[ Response StatusCode ] CODE ${error.response?.status || 'UNKNOWN'} | ${error.message}`, 'error');
+        this.logger.error(`[ Stack Error ] CODE ${error.stack || 'UNKNOWN'} | ${error.message}${error.message} ${error.message}`);
+        this.logger.error(`[ Response Error ] CODE ${error.code || 'UNKNOWN'} | ${error.message} | ${error.message}`);
+        this.logger.error(`[ Response StatusCode ] CODE ${error.response?.status || 'UNKNOWN'} | ${error.message}${error.message}`);
 
         return Promise.reject(error);
       },

@@ -1,7 +1,9 @@
 import { NextFunction, Response, Request } from 'express';
 import { BaseError } from '@context/shared/domain/class/BaseError';
-import Logger from '@context/shared/infrastructure/impl/WinstonInfoLogger';
+import Logger from '@context/shared/infrastructure/impl/WinstonLogger';
+import container from '@app/dependency-injection';
 
+const logger: Logger = container.get('Shared.Logger');
 export const ErrorHandlerResponse = (error: Error, req: Request, res: Response, _next: NextFunction): Response => {
   printError(error, req);
   if (error instanceof BaseError) return res.status(error.status).send(error.info);
@@ -9,7 +11,12 @@ export const ErrorHandlerResponse = (error: Error, req: Request, res: Response, 
 };
 
 const printError = (error: Error, req: Request): void => {
-  Logger.print(`Error on request: ${req.originalUrl}`, 'error');
-  Logger.print(`Error Stack: ${error.stack}`, 'error');
-  Logger.print(error, 'error');
+  logger.error(`--------- [REQUEST FAIL]: ${req.originalUrl} 
+      --------- [REQUEST HEADERS]: ${JSON.stringify(req.headers)}
+      --------- [REQUEST BODY]: ${JSON.stringify(req.body)}
+      --------- [REQUEST PARAMS]: ${JSON.stringify(req.params)}
+      --------- [REQUEST QUERY]: ${JSON.stringify(req.query)}
+      --------- [ERROR STACK]: ${error.stack}
+      --------- [ERROR MESSAGE]: ${error.message}
+      --------- [ERROR NAME]: ${error.name}`);
 };

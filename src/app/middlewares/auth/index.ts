@@ -1,14 +1,17 @@
 import { Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import WinstonInfoLogger from '@context/shared/infrastructure/impl/WinstonInfoLogger';
+import Logger from '@context/shared/infrastructure/impl/WinstonLogger';
 import { verify } from 'jsonwebtoken';
+import container from '@app/dependency-injection';
+
+const logger: Logger = container.get('Shared.Logger');
 
 export default class AuthValidator {
   static verify(req: any, res: Response, next: NextFunction) {
     const headers = req.headers;
 
     if (!headers.authorization) {
-      WinstonInfoLogger.print(`Auth: No authorization header - URL: ${req.url}`, 'error')
+      logger.error(`Auth: No authorization header - URL: ${req.url}`)
       return res.status(StatusCodes.UNAUTHORIZED).send({ message: 'No authorization header' })
     }
 

@@ -1,7 +1,10 @@
 import 'reflect-metadata';
 import { Server } from './Server';
 import config from '@app/config';
-import Logger from '@context/shared/infrastructure/impl/WinstonInfoLogger';
+import Logger from '@context/shared/infrastructure/impl/WinstonLogger';
+import container from '@app/dependency-injection';
+
+const logger: Logger = container.get('Shared.Logger');
 
 export class Run {
   server?: Server;
@@ -11,7 +14,7 @@ export class Run {
       this.server = new Server(Number(config.PORT));
       return this.server.listen();
     } catch (error) {
-      Logger.print(error);
+      logger.error(error);
     }
     this.server = new Server(Number(config.PORT));
     return this.server.listen();

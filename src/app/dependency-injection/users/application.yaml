@@ -13,11 +13,17 @@ services:
     arguments:
       - '@Repository.CRUD.User'
   
+  UseCase.User.GetById:
+    class: ../../../context/users/application/uses_cases/get/GetUserById
+    arguments:
+      - '@Repository.CRUD.User'
+  
   Service.User:
     class: ../../../context/users/infrastructure/services/UserService
     arguments:
       - '@UseCase.User.Create'
       - '@UseCase.User.GetAll'
+      - '@UseCase.User.GetById'
 
   Controller.User.Create:
     class: ../../controllers/users/create/CreateUserController
@@ -26,5 +32,10 @@ services:
       
   Controller.User.GetAll:
     class: ../../controllers/users/get/GetAllUsersController
+    arguments:
+      - '@Service.User'
+
+  Controller.User.GetUserById:
+    class: ../../controllers/users/get/GetUserByIdController
     arguments:
       - '@Service.User'
