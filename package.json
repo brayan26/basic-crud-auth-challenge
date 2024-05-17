@@ -1,6 +1,6 @@
 {
   "name": "basic-crud-auth-challenge",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Test for CI",
   "author": "Brayan Parra Perez",
   "main": "index.js",
